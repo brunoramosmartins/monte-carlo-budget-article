@@ -1,0 +1,44 @@
+# Claude Code
+.claude/
+
+# Roadmap (planning document, not part of deliverables)
+roadmap-monte-carlo-budget-v1.md
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+*.whl
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Figures (generated, but tracked via .gitkeep)
+# Uncomment below to ignore generated figures:
+# figures/*.png
+# figures/*.gif
+
+# Misc
+*.log
+.env
