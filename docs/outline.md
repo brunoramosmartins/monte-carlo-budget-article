@@ -8,14 +8,14 @@
 
 **Source Phase:** —
 
-**Hook:** "Your CFO asks for next year's IT headcount budget. You open a
-spreadsheet, multiply headcount by average salary, add benefits, round up
-for overtime — and deliver a number. A single number. But what if that number
-is just one sample from a distribution you've never seen?"
+**Hook:** "Your CFO asks for next year's budget. You open a spreadsheet,
+multiply quantities by unit costs, add a contingency margin — and deliver a
+number. A single number. But what if that number is just one sample from a
+distribution you've never seen?"
 
 **Content:**
-- The FYF (Forecast Year-end Financial) context: periodic reviews to detect
-  budget deviations
+- The periodic forecast review context: why organisations revisit budgets
+  mid-cycle to detect deviations
 - Why point estimates are the default and why they fail
 - What this article offers: a mathematical framework for probabilistic budgeting
 - Preview of the journey: probability -> convergence -> CLT -> Monte Carlo -> results
@@ -35,14 +35,18 @@ is just one sample from a distribution you've never seen?"
 
 ---
 
-## Section 3 — Random Variables in Disguise (600 words)
+## Section 3 — Budget Components as Random Variables (600 words)
 
 **Source Phase:** Phase 1
 
+> **Note:** The framework is general — any budget with proportional costs, fixed
+> charges, and rare events fits the same template. IT headcount is the case
+> study used throughout this article.
+
 **Content:**
-- Salaries as LogNormal random variables: why the right-skew?
-- Overtime as Poisson: discrete, rare events
-- Incidents as compound Poisson: random count times random severity
+- General template: proportional + fixed + compound rare events
+- Case study instantiation: salaries (LogNormal), overtime (Poisson),
+  incidents (compound Poisson)
 - The budget model: $X = \sum S_i \cdot \beta \cdot 12 + \sum H_i \cdot r_{ot} \cdot 12 + \sum C_{I_j}$
 - Expected value and variance derivations (condensed)
 - Analytical E[X] for default parameters (for later validation)
@@ -119,7 +123,7 @@ is just one sample from a distribution you've never seen?"
 **Content:**
 - Conceptual overview: prior + likelihood -> posterior
 - Budget context: prior = last year's distribution, likelihood = this year's data
-- Connection to FYF: informal Bayesian updating in practice
+- Connection to periodic forecast reviews: informal Bayesian updating in practice
 - Comparison table: frequentist MC vs Bayesian
 - When each approach is more appropriate
 - Why this article chose frequentist: generality, no prior elicitation needed

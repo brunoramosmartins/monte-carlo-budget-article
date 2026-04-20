@@ -1,8 +1,14 @@
 """Budget cost model for Monte Carlo simulation.
 
-This module defines the stochastic budget model for IT headcount planning.
-The model computes the total annual cost as the sum of three components:
-salaries with benefits, regular overtime, and incident-driven costs.
+This module implements the IT headcount instantiation of the general stochastic
+budget model template (proportional costs + fixed charges + compound rare
+events). The model computes the total annual cost as the sum of three
+components: salaries with benefits, regular overtime, and incident-driven costs.
+
+The same template structure applies to any budget domain — cloud
+infrastructure, marketing spend, construction projects, etc. — by swapping
+the variable names and distributional parameters. See the "Generalization"
+section in ``docs/model-design.md`` for guidance on adapting the template.
 
 All distributional choices and default parameters follow the specification
 in ``docs/model-design.md``.
@@ -15,7 +21,7 @@ import numpy as np
 
 @dataclass
 class BudgetModelParams:
-    """Parameters for the IT headcount budget model.
+    """Parameters for the budget model (IT headcount instantiation).
 
     Parameters
     ----------
@@ -76,7 +82,12 @@ class YearResult:
 
 
 class BudgetModel:
-    """Stochastic budget model for IT headcount planning.
+    """Stochastic budget model (IT headcount instantiation).
+
+    This class implements the IT headcount instantiation of the general
+    stochastic budget model template (proportional + fixed + compound events).
+    The three-term structure generalises to any domain; see
+    ``docs/model-design.md`` for the template and adaptation instructions.
 
     The total annual cost is:
 

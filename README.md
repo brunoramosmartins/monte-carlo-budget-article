@@ -1,17 +1,20 @@
 # Why Your Budget Never Hits the Exact Number
 
-## Monte Carlo Simulation for IT Budget Planning — from Point Estimates to Probability Distributions
+## Monte Carlo Simulation for Stochastic Budget Modelling — from Point Estimates to Probability Distributions
 
 Point estimates ignore uncertainty. This project uses Monte Carlo simulation to
-approximate the full distribution of outcomes, enabling interval-based forecasts.
-Grounded in the Law of Large Numbers and Central Limit Theorem.
+approximate the full distribution of budget outcomes, enabling interval-based
+forecasts. Grounded in the Law of Large Numbers and Central Limit Theorem.
+The framework is general; IT headcount planning serves as the primary case study.
 
 ## About
 
 A **portfolio-grade technical article** that replaces traditional point-estimate
 budgeting with stochastic modelling via Monte Carlo simulation. The article
-derives the mathematical foundations from first principles and applies them to
-a generic IT headcount budget model.
+derives the mathematical foundations from first principles and demonstrates the
+approach on an IT headcount budget — one instantiation of a general template
+that applies to any budget with proportional costs, fixed charges, and rare
+disruptive events.
 
 ### What This Project Is
 

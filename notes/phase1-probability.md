@@ -23,7 +23,7 @@ so that $P(X \in B)$ is well-defined.
 
 ### Connection to the Budget Model
 
-In our IT budget model, each salary $S_i$ is a random variable:
+In our budget model (here instantiated for IT headcount), each salary $S_i$ is a random variable:
 
 $$
 S_i : \Omega \to \mathbb{R}^+
@@ -58,7 +58,7 @@ $$
 The function $f_X$ is the **probability density function (PDF)**, and it
 satisfies $\int_{-\infty}^{\infty} f_X(x) \, dx = 1$.
 
-**In our model:** salaries $S_i$ and incident costs $C_{I_j}$ are continuous
+**In our budget model:** salaries $S_i$ and incident costs $C_{I_j}$ are continuous
 (LogNormal). Overtime hours $H_i$ and incident count $I$ are discrete (Poisson).
 
 ---

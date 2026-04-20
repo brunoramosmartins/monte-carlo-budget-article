@@ -4,8 +4,9 @@
 
 The model is intentionally **generic and minimal** — few variables, clear
 structure, easy to expand. It models the annual cost of an IT team as a sum
-of stochastic components. No proprietary data is used; all parameters are
-realistic but synthetic.
+of stochastic components, serving as one concrete instantiation of a general
+budget template. No proprietary data is used; all parameters are realistic
+but synthetic.
 
 ## Variables
 
@@ -104,6 +105,54 @@ Consider a single simulation (one "possible year"):
 7. Sum all three terms: this is ONE sample of $X_{\text{total}}$
 
 Repeat 10,000 times to get the distribution of $X_{\text{total}}$.
+
+## Generalization
+
+### The Template Structure
+
+The IT headcount model above is one instantiation of a **general stochastic
+budget template** with three structural components:
+
+$$
+X_{\text{total}} = \underbrace{\text{Proportional costs}}_{\text{scale with a count}} + \underbrace{\text{Fixed / periodic costs}}_{\text{deterministic or low-variance}} + \underbrace{\text{Compound rare events}}_{\text{random count} \times \text{random severity}}
+$$
+
+This decomposition applies to any budget where:
+
+1. **Proportional costs** scale with some unit count (employees, servers,
+   campaigns) and each unit carries its own distributional uncertainty.
+2. **Fixed or periodic costs** are either deterministic or have low relative
+   variance (e.g., licensing fees, rent).
+3. **Rare disruptive events** occur at a random rate and carry variable cost
+   per occurrence (compound Poisson structure).
+
+### Other Budget Domains That Fit This Pattern
+
+| Domain | Proportional | Fixed / Periodic | Compound Events |
+|--------|-------------|-----------------|-----------------|
+| **Cloud infrastructure** | Per-instance compute cost (varies with workload) | Reserved-instance commitments, license fees | Outage-driven autoscaling spikes |
+| **Marketing** | Cost-per-lead times lead volume | Agency retainers, platform subscriptions | Viral campaign surges or PR crises |
+| **Construction projects** | Material cost per unit area | Permits, insurance, site overhead | Weather delays, supply-chain disruptions |
+
+### How to Instantiate the Template for a New Domain
+
+1. **Identify the unit count** — the quantity that drives proportional costs
+   (headcount, server count, campaign impressions, square metres). Decide
+   whether it is deterministic or stochastic.
+2. **Choose distributions for per-unit costs** — LogNormal is a good default
+   for positive, right-skewed costs; Normal works for tightly controlled prices.
+3. **Enumerate fixed charges** — list costs that do not scale with the unit
+   count. These can start as deterministic and be promoted to random variables
+   if uncertainty is material.
+4. **Model rare events as compound Poisson** — pick a Poisson rate for event
+   frequency and a distribution (e.g., LogNormal) for per-event severity.
+5. **Calibrate parameters** — use historical data, expert judgement, or
+   sensitivity analysis to set distribution parameters.
+6. **Validate analytically** — derive $E[X]$ and $\text{Var}(X)$ from the
+   chosen distributions and confirm that Monte Carlo results match.
+
+The mathematical machinery (LLN, CLT, variance reduction) carries over
+unchanged — only the parameter names and distributional choices differ.
 
 ## Expansion Points (documented, not implemented in v1)
 
