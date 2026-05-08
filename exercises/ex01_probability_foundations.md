@@ -16,8 +16,7 @@ $$
 E[X] = e^{\mu + \sigma^2/2}
 $$
 
-*Hint: write $X = e^Y$ where $Y \sim N(\mu, \sigma^2)$, so $E[X] = E[e^Y] = M_Y(1)$.
-Use the MGF of the Normal distribution derived in Section 5.1 of the notes.*
+> **Hint:** write $X = e^Y$ where $Y \sim N(\mu, \sigma^2)$, so $E[X] = E[e^Y] = M_Y(1)$. Use the MGF of the Normal distribution derived in Section 5.1 of the notes.
 
 ---
 
@@ -26,12 +25,10 @@ Use the MGF of the Normal distribution derived in Section 5.1 of the notes.*
 **Prove** that:
 
 $$
-\text{Var}(X_1 + X_2 + \cdots + X_n) = \sum_{i=1}^n \text{Var}(X_i) + 2\sum_{i<j} \text{Cov}(X_i, X_j)
+\text{Var}(X_1 + X_2 + \cdots + X_n) = \sum_{i=1}^n \text{Var}(X_i) + 2\sum_{i \lt j} \text{Cov}(X_i, X_j)
 $$
 
-*Start from the definition $\text{Var}(S) = E[(S - E[S])^2]$ where
-$S = \sum X_i$. Expand the square and apply linearity of expectation. Count
-the cross terms carefully.*
+> **Hint:** start from the definition $\text{Var}(S) = E[(S - E[S])^2]$ where $S = \sum X_i$. Expand the square and apply linearity of expectation. Count the cross terms carefully.
 
 ---
 
@@ -46,9 +43,7 @@ $$
 
 where $\bar{X}_n = \frac{1}{n}\sum_{i=1}^n X_i$.
 
-*This result is the engine behind Monte Carlo convergence: averaging $n$
-independent simulations reduces variance by a factor of $n$. Use
-Theorem 3.2 (variance of a linear transformation) and the i.i.d. assumption.*
+> **Note:** this result is the engine behind Monte Carlo convergence: averaging $n$ independent simulations reduces variance by a factor of $n$. Use Theorem 3.2 (variance of a linear transformation) and the i.i.d. assumption.
 
 ---
 
@@ -60,12 +55,9 @@ $$
 E[X^2] \geq (E[X])^2
 $$
 
-*Consequence: variance is always non-negative, since
-$\text{Var}(X) = E[X^2] - (E[X])^2 \geq 0$.*
+> **Consequence:** variance is always non-negative, since $\text{Var}(X) = E[X^2] - (E[X])^2 \geq 0$.
 
-*Approach: consider the random variable $(X - \mu)^2 \geq 0$ and take
-expectations. Alternatively, use the fact that for any convex function $g$
-and any random variable $X$: $g(E[X]) \leq E[g(X)]$.*
+> **Approach:** consider the random variable $(X - \mu)^2 \geq 0$ and take expectations. Alternatively, use the fact that for any convex function $g$ and any random variable $X$: $g(E[X]) \leq E[g(X)]$.
 
 ---
 
@@ -124,7 +116,8 @@ $$
    $E[T_3] = E[I] \cdot E[C]$. Under what assumption is this valid?
 
 2. Using the **law of total variance**, compute $\text{Var}(T_3)$.
-   *Hint: $\text{Var}(T_3) = E[I] \cdot \text{Var}(C) + \text{Var}(I) \cdot (E[C])^2 = \lambda \cdot E[C^2]$.*
+
+   > **Hint:** $\text{Var}(T_3) = E[I] \cdot \text{Var}(C) + \text{Var}(I) \cdot (E[C])^2 = \lambda \cdot E[C^2]$.
 
 3. Compute $\text{SD}(T_3)$. Is the incident cost component more or less
    variable (relative to its mean) than the salary component?

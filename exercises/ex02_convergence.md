@@ -10,14 +10,13 @@ build intuition for Monte Carlo convergence. Solve on paper.
 ### Exercise 1 — Prove Markov's Inequality
 
 **Prove** Markov's inequality from the definition of expectation: for a
-non-negative random variable $X$ and $a > 0$:
+non-negative random variable $X$ and $a \gt 0$:
 
 $$
 P(X \geq a) \leq \frac{E[X]}{a}
 $$
 
-*Hint: split the integral $E[X] = \int_0^{\infty} x \, f_X(x) \, dx$ at $a$
-and bound the integrand in the region $[a, \infty)$.*
+> **Hint:** split the integral $E[X] = \int_0^{\infty} x \, f_X(x) \, dx$ at $a$ and bound the integrand in the region $[a, \infty)$.
 
 ---
 
@@ -30,8 +29,7 @@ $$
 P(|X - \mu| \geq \epsilon) \leq \frac{\sigma^2}{\epsilon^2}
 $$
 
-*Show each step of the substitution: define $Y$, verify $Y \geq 0$,
-identify the equivalent event, apply Markov, and simplify.*
+> **Hint:** show each step of the substitution: define $Y$, verify $Y \geq 0$, identify the equivalent event, apply Markov, and simplify.
 
 ---
 
@@ -41,15 +39,13 @@ identify the equivalent event, apply Markov, and simplify.*
 finite variance:
 
 If $X_1, \ldots, X_n$ are i.i.d. with $E[X_i] = \mu$ and
-$\text{Var}(X_i) = \sigma^2 < \infty$, then for every $\epsilon > 0$:
+$\text{Var}(X_i) = \sigma^2 \lt \infty$, then for every $\epsilon \gt 0$:
 
 $$
 \lim_{n \to \infty} P(|\bar{X}_n - \mu| \geq \epsilon) = 0
 $$
 
-*Use Chebyshev's inequality on $\bar{X}_n$. The proof has four steps:
-(1) compute $E[\bar{X}_n]$, (2) compute $\text{Var}(\bar{X}_n)$,
-(3) apply Chebyshev, (4) take the limit.*
+> **Hint:** use Chebyshev's inequality on $\bar{X}_n$. The proof has four steps: (1) compute $E[\bar{X}_n]$, (2) compute $\text{Var}(\bar{X}_n)$, (3) apply Chebyshev, (4) take the limit.
 
 ---
 
@@ -58,16 +54,9 @@ $$
 **Prove** that $\text{Var}(\bar{X}_n) \to 0$ is **necessary but not sufficient**
 for convergence in probability.
 
-*Part (a): Show that convergence in probability implies
-$\text{Var}(\bar{X}_n) \to 0$ when the variance exists. (Hint: if
-$\bar{X}_n \xrightarrow{P} \mu$, then $E[(\bar{X}_n - \mu)^2] \to 0$
-under bounded convergence.)*
+> **Part (a):** show that convergence in probability implies $\text{Var}(\bar{X}_n) \to 0$ when the variance exists. *Hint:* if $\bar{X}_n \xrightarrow{P} \mu$, then $E[(\bar{X}_n - \mu)^2] \to 0$ under bounded convergence.
 
-*Part (b): Explain why Chebyshev "closes the gap" — that is, why
-$\text{Var}(\bar{X}_n) \to 0$ is actually sufficient when combined with the
-Chebyshev inequality. What role does the bound
-$P(|\bar{X}_n - \mu| \geq \epsilon) \leq \text{Var}(\bar{X}_n)/\epsilon^2$
-play?*
+> **Part (b):** explain why Chebyshev "closes the gap" — that is, why $\text{Var}(\bar{X}_n) \to 0$ is actually sufficient when combined with the Chebyshev inequality. What role does the bound $P(|\bar{X}_n - \mu| \geq \epsilon) \leq \text{Var}(\bar{X}_n)/\epsilon^2$ play?
 
 ---
 
