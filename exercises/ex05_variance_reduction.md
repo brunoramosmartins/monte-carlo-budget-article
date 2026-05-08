@@ -21,8 +21,7 @@ $$
 \text{Var}(\hat{\mu}_{AV}) = \frac{1}{N}\left[\text{Var}(g(X)) + \text{Cov}(g(X), g(X'))\right]
 $$
 
-*Expand the variance of the average of paired terms. Use the fact that
-pairs are i.i.d. but within each pair, $X_i$ and $X_i'$ are correlated.*
+> **Hint:** expand the variance of the average of paired terms. Use the fact that pairs are i.i.d. but within each pair, $X_i$ and $X_i'$ are correlated.
 
 ---
 
@@ -36,9 +35,7 @@ $$
 
 by minimising $\text{Var}(\hat{\mu}_{CV})$ with respect to $c$.
 
-*Take the derivative of
-$\text{Var}(g - ch) = \text{Var}(g) - 2c\,\text{Cov}(g,h) + c^2\,\text{Var}(h)$
-with respect to $c$, set to zero, and verify the second-order condition.*
+> **Hint:** take the derivative of $\text{Var}(g - ch) = \text{Var}(g) - 2c\,\text{Cov}(g,h) + c^2\,\text{Var}(h)$ with respect to $c$, set to zero, and verify the second-order condition.
 
 ---
 
@@ -50,8 +47,7 @@ $$
 \text{Var}(\hat{\mu}_{CV}^*) = \frac{\text{Var}(g(X))}{N}(1 - \rho_{g,h}^2)
 $$
 
-*Substitute $c^*$ back into the variance formula from Exercise 2.
-Factor out $\text{Var}(g)/N$ and recognise $\rho^2$.*
+> **Hint:** substitute $c^*$ back into the variance formula from Exercise 2. Factor out $\text{Var}(g)/N$ and recognise $\rho^2$.
 
 **Interpret:** What happens as $\rho^2 \to 1$? When is control variates
 most effective? When is it useless ($\rho = 0$)?
@@ -66,10 +62,7 @@ $$
 \text{Var}(\hat{\mu}_{SS}) \leq \text{Var}(\hat{\mu}_{MC})
 $$
 
-*Use the law of total variance:
-$\text{Var}(g) = E[\text{Var}(g|A)] + \text{Var}(E[g|A])$.
-Show that stratified sampling removes the $\text{Var}(E[g|A])$ term,
-which is always $\geq 0$.*
+> **Hint:** use the law of total variance: $\text{Var}(g) = E[\text{Var}(g|A)] + \text{Var}(E[g|A])$. Show that stratified sampling removes the $\text{Var}(E[g|A])$ term, which is always $\geq 0$.
 
 ---
 
@@ -95,8 +88,8 @@ You partition the salary distribution into 3 strata:
 
 | Stratum | Range | Proportion $p_k$ | Within-stratum variance $\sigma_k^2$ |
 |---------|-------|-------------------|--------------------------------------|
-| Low | $S < 8K$ | 0.20 | $1.2 \times 10^6$ |
-| Medium | $8K \leq S < 15K$ | 0.60 | $0.8 \times 10^6$ |
+| Low | $S \lt 8K$ | 0.20 | $1.2 \times 10^6$ |
+| Medium | $8K \leq S \lt 15K$ | 0.60 | $0.8 \times 10^6$ |
 | High | $S \geq 15K$ | 0.20 | $3.5 \times 10^6$ |
 
 The overall variance is $\sigma^2 = 2.1 \times 10^6$.

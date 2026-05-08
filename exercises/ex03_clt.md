@@ -15,15 +15,13 @@ $$
 M_X(t) = \exp\left(\mu t + \frac{\sigma^2 t^2}{2}\right)
 $$
 
-*Complete the square in the integral:*
+> **Approach:** complete the square in the integral.
 
 $$
 M_X(t) = \int_{-\infty}^{\infty} e^{tx} \cdot \frac{1}{\sigma\sqrt{2\pi}} \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right) dx
 $$
 
-*Combine the exponents $tx - (x-\mu)^2/(2\sigma^2)$, complete the square
-in $x$, and recognise the resulting integral as a Normal PDF integrated
-over $\mathbb{R}$ (which equals 1).*
+> **Hint:** combine the exponents $tx - (x-\mu)^2/(2\sigma^2)$, complete the square in $x$, and recognise the resulting integral as a Normal PDF integrated over $\mathbb{R}$ (which equals 1).
 
 ---
 
@@ -54,11 +52,7 @@ follows directly from $\text{Var}(\bar{X}_N) = \sigma^2 / N$.
 Then explain: how does the CLT **upgrade** this from a variance statement
 to a distributional statement?
 
-*Specifically: the WLLN + Chebyshev gives
-$P(|\bar{X}_N - \mu| \geq \epsilon) \leq \sigma^2/(N\epsilon^2)$
-(a bound). The CLT gives
-$P(|\bar{X}_N - \mu| \geq \epsilon) \approx 2[1 - \Phi(\epsilon\sqrt{N}/\sigma)]$
-(an approximation). Why is the CLT result more useful in practice?*
+> **Specifically:** the WLLN + Chebyshev gives $P(|\bar{X}_N - \mu| \geq \epsilon) \leq \sigma^2/(N\epsilon^2)$ (a bound). The CLT gives $P(|\bar{X}_N - \mu| \geq \epsilon) \approx 2[1 - \Phi(\epsilon\sqrt{N}/\sigma)]$ (an approximation). Why is the CLT result more useful in practice?
 
 ---
 
@@ -73,9 +67,7 @@ $$
 for the minimum number of simulations needed to achieve a confidence interval
 of half-width $\epsilon$ at confidence level $1 - \alpha$.
 
-*Start from the CLT approximation
-$P(|\bar{X}_N - \mu| \leq \epsilon) \approx 1 - \alpha$
-and solve for $N$.*
+> **Hint:** start from the CLT approximation $P(|\bar{X}_N - \mu| \leq \epsilon) \approx 1 - \alpha$ and solve for $N$.
 
 ---
 
@@ -88,7 +80,7 @@ Results: $\bar{X} = 12{,}500{,}000$ and $s = 480{,}000$.
 
 **Compute** the 90%, 95%, and 99% confidence intervals for $E[X_{\text{total}}]$.
 
-*Use $z_{0.05} = 1.645$, $z_{0.025} = 1.960$, $z_{0.005} = 2.576$.*
+> **Use:** $z_{0.05} = 1.645$, $z_{0.025} = 1.960$, $z_{0.005} = 2.576$.
 
 ---
 

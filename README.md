@@ -123,6 +123,17 @@ Each phase includes paper exercises (proofs + computations) in `exercises/`:
 | `ex04_monte_carlo.md` | Unbiasedness, consistency, MSE, scaling law |
 | `ex05_variance_reduction.md` | Optimal c*, antithetic variance, stratified ≤ naive |
 
+## TIL — Today I Learned
+
+Short companion notes (100–300 words each) capturing one non-obvious insight
+per phase. Designed for portfolio publishing on LinkedIn / Medium / blog.
+See [`til/README.md`](til/README.md) for the full index. Highlights:
+
+- [Linearity of expectation needs no independence](til/til-phase-1-linearity-without-independence.md)
+- [Halving a CI quadruples the cost](til/til-phase-3-precision-is-quadratic.md)
+- [One known mean replaces 49,000 simulations](til/til-phase-5-control-variate-as-leverage.md)
+- [Every forecast review you ever ran was already Bayesian](til/til-phase-6-fyf-is-bayesian-update.md)
+
 ## Tech Stack
 
 - **Python 3.10+** with type hints
