@@ -6,24 +6,23 @@
 
 ## 0. What You Need to Know
 
-This article is self-contained, but five concepts will recur often. If any
-feels unfamiliar, the one-line definition below is enough to follow the
-narrative; the full derivations come in later sections.
+This article assumes familiarity with:
 
-| Concept | One-line idea |
-|---------|---------------|
-| **Random variable** | A quantity whose value is determined by a random outcome (e.g., next month's salary cost). It is described by a *distribution*, not a single number. |
-| **Distribution** | The full description of how often each value occurs — what the random variable can be, and with what probability. |
-| **Expected value $E[X]$** | The long-run average. The "centre" of the distribution, but not the whole story. |
-| **Variance $\text{Var}(X)$** | A measure of spread: how far typical values fall from the mean. Larger variance = more uncertainty. |
-| **Confidence interval** | A range that captures the true value with a given probability (e.g., 95%). The width tells you how precise your estimate is. |
+**Required:**
+- Basic calculus: derivatives, integrals, Taylor expansion (used in §4–§5)
+- Basic probability: random variables, PDF / PMF, CDF, expectation, variance
+- Reading mathematical notation comfortably
 
-You also need a working idea of:
+**Helpful but not required:**
+- Prior exposure to the Law of Large Numbers and the Central Limit Theorem (both are derived from first principles in §4 and §5)
+- Familiarity with confidence intervals (derived in §5)
+- Working knowledge of NumPy (used in the implementation, but the article is readable without it)
 
-- **i.i.d.** (independent and identically distributed) — the simulations are independent draws from the same distribution.
-- **Monte Carlo simulation** — running many random scenarios and averaging the results.
-
-If you have seen a normal curve, computed an average, and understand "the chance of X happening", you have enough to read every section.
+**Out of scope (won't be covered):**
+- Heavy-tailed distributions and how to choose them — see the companion article on distribution selection
+- Bayesian inference beyond a conceptual update example (§8)
+- Real-world data quality issues (NDA, censoring, reporting noise)
+- Time-series forecasting (rolling regimes, ARIMA, state-space models)
 
 ### Reading Guide
 
@@ -31,11 +30,11 @@ The article works at three levels of depth. Pick what suits you.
 
 | If you are… | Read | Skip / skim |
 |------------|------|--------------|
-| **A budget owner / executive** | §1, §2, §9 (results), §10 (framework), §11 | The proofs in §4 and §5 — read only the takeaway boxes |
-| **An analyst applying the method** | §1–§3, §6, §7, §9, §10 | The MGF proof in §5 |
-| **A reader auditing the math** | All sections in order | Nothing |
+| A budget owner / executive | §1, §2, §9 (results), §10 (framework), §11 | The proofs in §4 and §5 — read only the takeaway notes |
+| An analyst applying the method | §1–§3, §6, §7, §9, §10 | The MGF proof in §5 |
+| A reader auditing the math | All sections in order | Nothing |
 
-The figures and the "How to Present Results" box in §10 are the highest-value pieces if you are skimming.
+The figures and the "How to Present Results" passage in §10 are the highest-value pieces for a quick read.
 
 ---
 
@@ -59,7 +58,7 @@ A point estimate gives you a number. A distribution gives you the **policy**: ho
 
 ### What Changes With a Distribution
 
-This article replaces the single number with a **probability distribution**. Using Monte Carlo simulation grounded in the Law of Large Numbers and the Central Limit Theorem, we transform "we expect to spend R$ 11.5M" into "we are 90% confident spending will fall between R$ 10.7M and R$ 12.4M, with a 7% probability of exceeding the ceiling."
+This article replaces the single number with a **probability distribution**. Using Monte Carlo simulation grounded in the Law of Large Numbers and the Central Limit Theorem, we transform "we expect to spend R$ 11.5M" into "we are 90% confident spending will fall between R$ 10.7M and R$ 12.4M, with a 3% probability of exceeding the ceiling."
 
 > **A budget is a distribution, not a number.** This single shift changes how budgets are *approved*, not just how they are *calculated*. The output is no longer a target — it is a risk profile that a CFO can underwrite.
 
@@ -127,9 +126,7 @@ The point estimate is not a *missing* model. It is a model with hidden assumptio
 >
 > If you are asked "what is the chance we exceed budget by more than 10%?", a deterministic spreadsheet has no answer — only a guess. Monte Carlo does.
 
-The contingency factor is not the problem. The problem is that the spreadsheet *had* to make a distributional assumption, did so silently, and then refused to tell you which one. Monte Carlo makes the distribution explicit, calibrated, and falsifiable.
-
-> **Bridge to §3:** before we can simulate from $F_X$, we have to *write down* $F_X$ — that is, declare which budget components are random and which distributions describe them. That is the next section.
+The contingency factor is not the problem. The problem is that the spreadsheet *had* to make a distributional assumption, did so silently, and then refused to tell you which one. Monte Carlo makes the distribution explicit, calibrated, and falsifiable. Before we can simulate from $F_X$, however, we first have to write it down — declaring which budget components are random and which distributions describe them. That is what the next section does.
 
 ### The General Pattern
 
@@ -167,13 +164,13 @@ The hardest practical question is *which components to model as random*. The tab
 
 | Component | Random? | Distribution | Why |
 |-----------|---------|--------------|-----|
-| Salary per employee | ✅ Yes | LogNormal | Strictly positive, right-skewed by seniority |
-| Headcount | ⚠️ Sometimes | Poisson (if hiring/attrition modelled) | Often deterministic in v1; expand later |
-| Benefits multiplier | ❌ No | Constant | Negotiated annually, low variance |
-| Overtime hours | ✅ Yes | Poisson | Discrete count of independent events |
-| Incident count | ✅ Yes | Poisson | Rare events with constant rate |
-| Incident cost | ✅ Yes | LogNormal | Heavy right tail (a few large incidents) |
-| FX rate (if applicable) | ✅ Yes | Normal or empirical | Symmetric around forward rate |
+| Salary per employee | Yes | LogNormal | Strictly positive, right-skewed by seniority |
+| Headcount | Sometimes | Poisson (if hiring/attrition modelled) | Often deterministic in v1; expand later |
+| Benefits multiplier | No | Constant | Negotiated annually, low variance |
+| Overtime hours | Yes | Poisson | Discrete count of independent events |
+| Incident count | Yes | Poisson | Rare events with constant rate |
+| Incident cost | Yes | LogNormal | Heavy right tail (a few large incidents) |
+| FX rate (if applicable) | Yes | Normal or empirical | Symmetric around forward rate |
 
 > **Rule of thumb:** model a component as **random** if it satisfies *either* of these:
 >
@@ -253,13 +250,9 @@ The same structure applies to:
 
 In each case: identify the random components, choose distributions, and simulate.
 
-> ### ⚠️ Distributions Matter
->
-> Everything that follows assumes the distributions chosen for each component are *correct*. Monte Carlo will faithfully simulate from whatever you feed it — including a bad model. A LogNormal salary fit to data that is actually heavy-tailed will produce a CI that looks tight and is **wrong**.
->
-> The companion article on **distribution selection and heavy tails** treats this question directly: how to pick a distribution from data, when to suspect a heavier tail than your eye says, and what happens to risk estimates when you get it wrong. If you only have time to read one, read this one first; the companion is what stops you from being precisely wrong.
+A short caveat before moving on. Everything that follows assumes the distributions chosen for each component are *correct*. Monte Carlo will faithfully simulate from whatever you feed it — including a bad model. A LogNormal salary fit to data that is actually heavy-tailed will produce a CI that looks tight and is wrong. The companion article on distribution selection and heavy tails treats this question directly — how to pick a distribution from data, when to suspect a heavier tail than your eye says, and what happens to risk estimates when you get it wrong. If you only have time to read one, read this one first; the companion is what stops you from being precisely wrong.
 
-> **Bridge to §4:** the model is now defined. The next two sections answer the two questions any practitioner asks before trusting a simulation: *"will the average converge?"* (LLN, §4) and *"how confident can I be after $N$ runs?"* (CLT, §5).
+With the model defined, the next two sections answer the two questions any practitioner asks before trusting a simulation: *will the average converge?* (Section 4, the Law of Large Numbers) and *how confident can I be after $N$ runs?* (Section 5, the Central Limit Theorem).
 
 ---
 
@@ -294,7 +287,7 @@ The Strong Law provides an even stronger guarantee: $\bar{X}_N \to \mu$ almost s
 ![LLN Convergence](../figures/lln_convergence.png)
 *Figure 1: Ten independent runs of the sample mean converging to $E[X]$, with Chebyshev 95% confidence band.*
 
-> **Bridge to §5:** the LLN guarantees we get the right answer eventually. It does *not* tell us how close we are after, say, $N = 1{,}000$ runs. The CLT closes that gap by giving the *shape* of the error, which is what lets us build confidence intervals.
+The LLN guarantees we get the right answer eventually. It does not tell us how close we are after, say, $N = 1{,}000$ runs — Chebyshev's bound is a worst case across all distributions, not a sharp estimate. To answer "how confident can I be?" we need the *shape* of the error, not just its decay. That is what the Central Limit Theorem provides.
 
 ---
 
@@ -355,7 +348,7 @@ For our case study ($\sigma \approx 493K$, $\epsilon = 100K$, 95%): $N \geq 94$.
 ![CLT Normality Emergence](../figures/clt_normality_emergence.png)
 *Figure 2: As $n$ increases, the standardised sample mean converges to $N(0,1)$.*
 
-> **Bridge to §6:** with the LLN giving convergence and the CLT giving the error rate, the Monte Carlo estimator is fully specified — and we can finally state its formal properties.
+With the LLN giving convergence and the CLT giving the error rate, the Monte Carlo estimator is fully specified. We can finally state its formal properties — and address the quiet question of when, despite all this, the estimator can still produce confidently wrong answers.
 
 ---
 
@@ -407,7 +400,7 @@ Monte Carlo is a faithful estimator of $E[g(X)]$ given a model. It is *not* a ch
 
 The honest claim is narrower than "Monte Carlo gives the answer". It is: *Monte Carlo gives the answer that the model implies*. Failures upstream of the simulation — wrong distribution, wrong dependencies, wrong tail — are not detected by the simulation itself. Validate them separately.
 
-> **Bridge to §7:** the estimator works, with caveats. But the $O(1/\sqrt{N})$ rate is harsh — every halving of the CI requires quadrupling the simulations. The next section shows how to break that ceiling without changing $N$.
+With those caveats acknowledged, the estimator does work — but the $O(1/\sqrt{N})$ rate is harsh. Every halving of the CI requires quadrupling the simulations, and at the precision needed for serious budget decisions that gets expensive fast. The next section shows how to break that ceiling without changing $N$.
 
 ---
 
@@ -435,7 +428,7 @@ $$
 \text{Var}(\hat{\theta}_{CV}) = \frac{\text{Var}(g(X))}{N}(1 - \rho_{g,h}^2)
 $$
 
-**In our case study:** using total raw salaries as control ($\rho \approx 0.99$) gives ~50× variance reduction. In any budget, the dominant cost component with a known analytical mean is the natural control variate.
+**In our case study:** using total raw salaries as control ($\rho \approx 0.99$) gives roughly a **30× variance reduction** — equivalently, a 5–6× tightening of the 95% CI half-width at any given $N$. In any budget, the dominant cost component with a known analytical mean is the natural control variate.
 
 ### Antithetic Variates
 
@@ -462,15 +455,15 @@ Always. Stratification removes between-strata variance.
 
 ### Why This Matters Beyond the Math: Compute ROI
 
-A 50× variance reduction sounds like a mathematical curiosity. It is a **compute and response-time** result.
+A 30× variance reduction sounds like a mathematical curiosity. It is a **compute and response-time** result.
 
-Suppose the naive simulation needs $N = 50{,}000$ runs to deliver a ±R$ 50K confidence interval. With control variates, the same precision lands at $N = 1{,}000$. Translating into engineering reality:
+Suppose the naive simulation needs $N = 30{,}000$ runs to deliver a ±R$ 50K confidence interval. With control variates, the same precision lands at $N = 1{,}000$. Translating into engineering reality:
 
 | Aspect | Naive MC | With Control Variates | Practical Implication |
 |--------|---------|----------------------|----------------------|
-| Runs to ±R$ 50K CI | 50,000 | 1,000 | 50× fewer scenarios |
-| Wall-clock on a laptop | ~30 s | ~0.6 s | **Real-time interactive update** |
-| Cloud cost per refresh | ~50 vCPU-seconds | ~1 vCPU-second | Negligible per query |
+| Runs to ±R$ 50K CI | 30,000 | 1,000 | 30× fewer scenarios |
+| Wall-clock on a laptop | ~18 s | ~0.6 s | **Real-time interactive update** |
+| Cloud cost per refresh | ~30 vCPU-seconds | ~1 vCPU-second | Negligible per query |
 | Suitable for dashboard | No (too slow) | Yes | A CFO can rerun during a board meeting |
 
 The ROI is not the variance number; it is what the variance number *enables*:
@@ -481,7 +474,7 @@ The ROI is not the variance number; it is what the variance number *enables*:
 
 The math justifies the technique. The compute economics is what gets it shipped.
 
-> **Bridge to §8:** so far the simulation is built once, before the year starts. Section 8 reframes the same machinery as the *first version* of a budget that gets updated monthly with real data — a Bayesian extension that turns a one-shot script into a living forecast.
+So far, the simulation is built once, before the year starts — a static distribution that anchors a one-shot decision. But budgets are not one-shot artefacts; they are revisited every month as real spending data arrives. The next section reframes the same machinery as the *first version* of a budget that gets updated continuously, a Bayesian extension that turns the one-shot script into a living forecast.
 
 ---
 
@@ -538,7 +531,7 @@ A team that ships only the Phase 1 simulation has built a script. A team that sh
 
 This article focuses on Phase 1 because Phase 2 inherits its rigour: a Bayesian update on top of a badly-calibrated prior is just a slow way to be wrong. Get the simulation right first; the lifecycle layer is then a small addition. Section 10 returns to this lifecycle view in the practical framework.
 
-> **Bridge to §9:** theory and reframing aside, does the engine work? Section 9 runs five experiments — convergence, normality emergence, full simulation, variance reduction, sensitivity — to validate every claim made so far.
+Theory and reframing aside, the question that decides whether any of this matters is: *does the engine actually work?* The next section answers it experimentally — five controlled studies covering convergence, normality emergence, full simulation, variance reduction, and sensitivity, each with explicit setup, metric, and result.
 
 ---
 
@@ -569,7 +562,7 @@ Each experiment follows the same template — **Objective**, **Setup**, **Metric
 - **Objective:** estimate the full distribution of $X_{\text{total}}$, not just its mean — and quantify the probability of exceeding a ceiling.
 - **Setup:** $N = 50{,}000$ iterations of the IT headcount budget model with default parameters, seed 42. Ceiling at R$ 12.5M.
 - **Metric:** relative error of MC mean vs analytical $E[X]$, 95% CI half-width, P5–P95 range, $P(X \gt \text{ceiling})$.
-- **Result:** MC mean within 0.1% of analytical. 95% CI half-width ≈ R$ 4K. P5–P95 spans ~R$ 1.6M. $P(\text{over R\$ 12.5M}) \approx 7\%$. The distribution is right-skewed.
+- **Result:** MC mean within 0.1% of analytical. 95% CI half-width approximately R$ 4K. P5–P95 spans ~R$ 1.6M. The probability of exceeding R$ 12.5M is approximately 3%. The distribution is right-skewed.
 
 ![Budget Simulation](../figures/budget_simulation.png)
 *Figure 4: Budget cost distribution (histogram + CDF) with mean, P5/P95, and budget ceiling annotated.*
@@ -579,16 +572,18 @@ Each experiment follows the same template — **Objective**, **Setup**, **Metric
 - **Objective:** measure the speedup from control variates and antithetic variates against naive MC at matched $N$.
 - **Setup:** all three methods at $N \in \{500, 1{,}000, 2{,}000, 5{,}000, 10{,}000\}$. Control variate: total raw salary sum (analytical mean known).
 - **Metric:** 95% CI half-width per method, plotted against $N$ on log-log axes.
-- **Result:** control variates reduce CI width by **~10×** at every $N$ tested (effective $\rho \approx 0.99$). Antithetic gives a modest improvement. The slope on log-log is $-1/2$ for all methods, confirming the $O(1/\sqrt{N})$ rate — variance reduction shifts the *intercept*, not the rate.
+- **Result:** control variates reduce CI width by approximately **5–6×** at every $N$ tested (corresponding to a ~30× variance reduction; effective $\rho \approx 0.99$). The antithetic implementation overlaps closely with naive MC — its modest gain reflects that the budget model's compound Poisson structure is hard to "mirror" cleanly with seed-based pairing. The slope on log-log is $-1/2$ for all methods, confirming the $O(1/\sqrt{N})$ rate — variance reduction shifts the *intercept*, not the rate.
 
 *See Figure 3.*
 
 ### Experiment E — Sensitivity Analysis
 
-- **Objective:** rank model parameters by their impact on $E[X_{\text{total}}]$, to guide where to spend modelling effort.
-- **Setup:** vary each of 8 parameters by ±20% holding others fixed. For each variation, run $N = 10{,}000$, record $E[X]$.
+- **Objective:** rank model parameters by their impact on $E[X_{\text{total}}]$ to guide where to spend modelling effort.
+- **Setup:** vary the **effective contribution** of each of 8 parameters by ±20% (for log-mean parameters, this is an additive shift of $\ln(1.2)$; for linear parameters, a multiplicative scale). Hold all others fixed. Run $N = 10{,}000$ per variation.
 - **Metric:** percentage change in $E[X_{\text{total}}]$ relative to the base case.
-- **Result:** the dominant cost component's parameters (salary log-mean, headcount) account for ~95% of the spread. Overtime and incident parameters have <1% impact each on the mean. **Practical implication:** invest modelling effort in the parameters of your largest cost component.
+- **Result:** three parameters dominate, each producing roughly the same ±19–20% swing in $E[X_{\text{total}}]$: the salary mean ($\mu_s$ via $E[S]$), the benefits multiplier ($\beta$), and the headcount ($n$). All three act linearly on the salary component, which is ~97% of the budget. Overtime and incident parameters change the total by less than 1%. **Practical implication:** invest modelling effort in the three salary-cost levers; refining the overtime or incident model is rounding error.
+
+> **Why "effective ±20%" and not raw ±20%?** The salary log-mean $\mu_s$ enters $E[S] = e^{\mu_s + \sigma_s^2/2}$ exponentially. Varying $\mu_s$ by ±20% additively would multiply $E[S]$ by $\approx 6.3\times$ — making the chart visually dominated by $\mu_s$ for a non-business reason. The corrected setup varies the *effective expected value* of each component, so the ranking reflects business sensitivity, not parameter scale.
 
 ![Sensitivity Tornado](../figures/sensitivity_tornado.png)
 *Figure 5: Tornado chart showing parameter impact on $E[X_{\text{total}}]$.*
@@ -601,11 +596,11 @@ Each experiment follows the same template — **Objective**, **Setup**, **Metric
 | MC mean (N=50K) | Within 0.1% of analytical |
 | 95% CI half-width (N=50K) | ~R$ 4K |
 | P5–P95 range | ~R$ 1.6M |
-| $P(X \gt R\$ 12.5M)$ | ~7% |
+| P(X exceeds R$ 12.5M) | ~3% |
 | Most sensitive parameter | Dominant component's mean |
-| Best variance reduction | Control variates (~10–50×) |
+| Best variance reduction | Control variates (~30× variance, ~5–6× CI width) |
 
-> **Bridge to §10:** the experiments confirm the engine works. Section 10 turns it into a workflow — what to do on Monday morning, how to present results to a non-technical audience, and what to demand of any budget that crosses your desk.
+The experiments confirm the engine works. The remaining gap is operational: turning a validated simulation into a workflow that a budget owner can run on Monday morning, present to leadership without losing the audience, and apply across budget types beyond the case study. That is what the practical framework provides.
 
 ---
 
@@ -656,17 +651,17 @@ This converts the distribution into three numbers any budget owner can act on �
 
 The single highest-leverage moment in this whole article is the language a budget owner uses in front of leadership. Print this side-by-side comparison and stick it on the wall.
 
-> **🚫 Before — point estimate:**
+> **Before — point estimate:**
 >
 > *"The budget for next year is R$ 11.55M."*
 >
 > A target. No risk attached. Every variance reads as a miss.
 
-> **✅ After — distribution + policy:**
+> **After — distribution + policy:**
 >
 > *"We are 95% confident the cost will fall between R$ 10.7M and R$ 12.4M, with a mean of R$ 11.55M.*
 >
-> *We propose to reserve R$ 12.0M as the planned budget (P90), with an additional R$ 500K of risk capital available if needed (P99). The probability of exceeding R$ 12.5M is approximately 7%. The primary driver of uncertainty is [dominant component] — investing in better salary forecasts will tighten the range more than any other action."*
+> *We propose to reserve R$ 12.0M as the planned budget (P90), with an additional R$ 500K of risk capital available if needed (P99). The probability of exceeding R$ 12.5M is approximately 3%. The primary driver of uncertainty is [dominant component] — investing in better salary forecasts will tighten the range more than any other action."*
 >
 > A risk profile leadership can underwrite. Variances read against the *interval*, not the mean.
 
@@ -705,7 +700,7 @@ A single-number budget is an **incomplete model**. It compresses a distribution 
 
 That compression has a cost. Capital is over-reserved against fears nobody quantified, or under-reserved against tails nobody saw. Forecast variances are read as errors instead of as draws from a distribution. The CFO is asked to underwrite a target, not a risk.
 
-This article built the mathematical machinery to replace the single number with a probability distribution. We proved the estimator converges (LLN), quantified its error (CLT), and made the simulation efficient (variance reduction). The experimental validation confirmed it works: Monte Carlo recovers the analytical mean within 0.1%, control variates give a 10–50× speedup, and the most sensitive parameter is exactly the dominant cost component — telling the analyst where to spend modelling effort.
+This article built the mathematical machinery to replace the single number with a probability distribution. We proved the estimator converges (LLN), quantified its error (CLT), and made the simulation efficient (variance reduction). The experimental validation confirmed it works: Monte Carlo recovers the analytical mean within 0.1%, control variates give roughly a 30× variance reduction (5–6× tighter CI), and the most sensitive parameter is exactly the dominant cost component — telling the analyst where to spend modelling effort.
 
 But the deeper claim is not technical. It is this:
 

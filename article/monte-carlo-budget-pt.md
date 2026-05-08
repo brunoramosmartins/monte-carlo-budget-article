@@ -6,24 +6,23 @@
 
 ## 0. O Que Voce Precisa Saber
 
-O artigo e auto-contido, mas cinco conceitos vao reaparecer com frequencia.
-Se algum parecer pouco familiar, a definicao em uma linha abaixo e suficiente
-para acompanhar a narrativa; as derivacoes completas vem nas secoes seguintes.
+Este artigo assume familiaridade com:
 
-| Conceito | Ideia em uma linha |
-|----------|--------------------|
-| **Variavel aleatoria** | Uma quantidade cujo valor depende de um resultado aleatorio (ex.: o custo salarial do mes que vem). E descrita por uma *distribuicao*, nao por um numero unico. |
-| **Distribuicao** | Descricao completa de quao frequentemente cada valor ocorre — quais valores a variavel pode assumir, e com que probabilidade. |
-| **Valor esperado $E[X]$** | A media de longo prazo. O "centro" da distribuicao, mas nao a historia toda. |
-| **Variancia $\text{Var}(X)$** | Medida de dispersao: quao distantes os valores tipicos ficam da media. Variancia maior = mais incerteza. |
-| **Intervalo de confianca** | Faixa que contem o valor verdadeiro com uma probabilidade dada (ex.: 95%). A amplitude indica a precisao da estimativa. |
+**Necessario:**
+- Calculo basico: derivadas, integrais, expansao de Taylor (usados em §4–§5)
+- Probabilidade basica: variaveis aleatorias, FDP / FMP, FDA, esperanca, variancia
+- Leitura confortavel de notacao matematica
 
-Voce tambem precisa de uma nocao operacional de:
+**Util mas nao obrigatorio:**
+- Exposicao previa a Lei dos Grandes Numeros e ao Teorema Central do Limite (ambos sao derivados a partir de primeiros principios em §4 e §5)
+- Familiaridade com intervalos de confianca (derivados em §5)
+- Conhecimento operacional de NumPy (usado na implementacao, mas o artigo e legivel sem)
 
-- **i.i.d.** (independentes e identicamente distribuidas) — as simulacoes sao sorteios independentes da mesma distribuicao.
-- **Simulacao Monte Carlo** — rodar muitos cenarios aleatorios e calcular a media dos resultados.
-
-Se voce ja viu uma curva normal, calculou uma media e entende "a chance de X acontecer", tem o suficiente para ler todas as secoes.
+**Fora do escopo (nao sera coberto):**
+- Distribuicoes de cauda pesada e como escolhe-las — ver o artigo companheiro sobre selecao de distribuicoes
+- Inferencia Bayesiana alem de um exemplo conceitual de atualizacao (§8)
+- Problemas de qualidade de dados reais (NDA, censura, ruido de reporte)
+- Previsao em series temporais (regimes rolantes, ARIMA, modelos em espaco de estados)
 
 ### Guia de Leitura
 
@@ -31,11 +30,11 @@ O artigo opera em tres niveis de profundidade. Escolha o que faz sentido para vo
 
 | Se voce e… | Leia | Pule / passe rapido |
 |------------|------|---------------------|
-| **Gestor de orcamento / executivo** | §1, §2, §9 (resultados), §10 (framework), §11 | As provas em §4 e §5 — leia so os boxes de takeaway |
-| **Analista aplicando o metodo** | §1–§3, §6, §7, §9, §10 | A prova via FGM em §5 |
-| **Leitor auditando a matematica** | Todas as secoes em ordem | Nada |
+| Gestor de orcamento / executivo | §1, §2, §9 (resultados), §10 (framework), §11 | As provas em §4 e §5 — leia apenas as notas de takeaway |
+| Analista aplicando o metodo | §1–§3, §6, §7, §9, §10 | A prova via FGM em §5 |
+| Leitor auditando a matematica | Todas as secoes em ordem | Nada |
 
-As figuras e o box "Como Apresentar Resultados" em §10 sao os pedacos de maior valor se voce estiver passando rapido pelo texto.
+As figuras e a passagem "Como Apresentar Resultados" em §10 sao os pedacos de maior valor para uma leitura rapida.
 
 ---
 
@@ -59,7 +58,7 @@ Uma estimativa pontual entrega um numero. Uma distribuicao entrega a **politica*
 
 ### O Que Muda com uma Distribuicao
 
-Este artigo substitui o numero unico por uma **distribuicao de probabilidade**. Usando simulacao Monte Carlo fundamentada na Lei dos Grandes Numeros e no Teorema Central do Limite, transformamos "esperamos gastar R$ 11,5M" em "temos 90% de confianca de que os gastos ficarao entre R$ 10,7M e R$ 12,4M, com 7% de probabilidade de ultrapassar o teto."
+Este artigo substitui o numero unico por uma **distribuicao de probabilidade**. Usando simulacao Monte Carlo fundamentada na Lei dos Grandes Numeros e no Teorema Central do Limite, transformamos "esperamos gastar R$ 11,5M" em "temos 90% de confianca de que os gastos ficarao entre R$ 10,7M e R$ 12,4M, com 3% de probabilidade de ultrapassar o teto."
 
 > **Um orcamento e uma distribuicao, nao um numero.** Essa unica mudanca altera como orcamentos sao *aprovados*, nao apenas como sao *calculados*. O resultado deixa de ser uma meta — passa a ser um perfil de risco que um CFO pode subscrever.
 
@@ -127,9 +126,7 @@ A estimativa pontual nao e um modelo *ausente*. E um modelo com hipoteses escond
 >
 > Se te perguntarem "qual a chance de estourarmos o orcamento em mais de 10%?", uma planilha deterministica nao tem resposta — so um chute. Monte Carlo tem.
 
-O fator de contingencia nao e o problema. O problema e que a planilha *teve* que fazer uma hipotese distribucional, fez em silencio, e depois se recusou a dizer qual. Monte Carlo torna a distribuicao explicita, calibrada e falsificavel.
-
-> **Ponte para §3:** antes de simular a partir de $F_X$, precisamos *escrever* $F_X$ — ou seja, declarar quais componentes do orcamento sao aleatorios e quais distribuicoes os descrevem. E o que vem na proxima secao.
+O fator de contingencia nao e o problema. O problema e que a planilha *teve* que fazer uma hipotese distribucional, fez em silencio, e depois se recusou a dizer qual. Monte Carlo torna a distribuicao explicita, calibrada e falsificavel. Antes de simular a partir de $F_X$, no entanto, precisamos primeiro escreve-la — declarando quais componentes do orcamento sao aleatorios e quais distribuicoes os descrevem. E o que a proxima secao faz.
 
 ### O Padrao Geral
 
@@ -167,13 +164,13 @@ A pergunta pratica mais dificil e *quais componentes modelar como aleatorios*. A
 
 | Componente | Aleatorio? | Distribuicao | Por que |
 |------------|-----------|--------------|---------|
-| Salario por funcionario | ✅ Sim | LogNormal | Estritamente positivo, assimetrico a direita por senioridade |
-| Headcount | ⚠️ As vezes | Poisson (se hiring/attrition modelados) | Frequentemente deterministico na v1; expandir depois |
-| Multiplicador de beneficios | ❌ Nao | Constante | Negociado anualmente, baixa variancia |
-| Horas extras | ✅ Sim | Poisson | Contagem discreta de eventos independentes |
-| Contagem de incidentes | ✅ Sim | Poisson | Eventos raros com taxa constante |
-| Custo por incidente | ✅ Sim | LogNormal | Cauda direita pesada (poucos incidentes grandes) |
-| Cambio (se aplicavel) | ✅ Sim | Normal ou empirica | Simetrica em torno da taxa forward |
+| Salario por funcionario | Sim | LogNormal | Estritamente positivo, assimetrico a direita por senioridade |
+| Headcount | As vezes | Poisson (se hiring/attrition modelados) | Frequentemente deterministico na v1; expandir depois |
+| Multiplicador de beneficios | Nao | Constante | Negociado anualmente, baixa variancia |
+| Horas extras | Sim | Poisson | Contagem discreta de eventos independentes |
+| Contagem de incidentes | Sim | Poisson | Eventos raros com taxa constante |
+| Custo por incidente | Sim | LogNormal | Cauda direita pesada (poucos incidentes grandes) |
+| Cambio (se aplicavel) | Sim | Normal ou empirica | Simetrica em torno da taxa forward |
 
 > **Regra pratica:** modele um componente como **aleatorio** se ele satisfaz *qualquer* uma destas condicoes:
 >
@@ -253,13 +250,9 @@ A mesma estrutura se aplica a:
 
 Em cada caso: identifique os componentes aleatorios, escolha distribuicoes, e simule.
 
-> ### ⚠️ As Distribuicoes Importam
->
-> Tudo o que vem a seguir assume que as distribuicoes escolhidas para cada componente sao *corretas*. Monte Carlo simulara fielmente o que voce alimentar — incluindo um modelo ruim. Uma LogNormal de salarios ajustada a dados que sao, na verdade, de cauda pesada vai gerar um IC que parece estreito e esta **errado**.
->
-> O artigo companheiro sobre **selecao de distribuicoes e caudas pesadas** trata dessa pergunta diretamente: como escolher uma distribuicao a partir de dados, quando suspeitar de uma cauda mais pesada do que a vista sugere, e o que acontece com estimativas de risco quando voce erra. Se so der tempo de ler um, leia este primeiro; o companheiro e o que impede voce de estar precisamente errado.
+Uma ressalva curta antes de prosseguir. Tudo o que vem a seguir assume que as distribuicoes escolhidas para cada componente sao *corretas*. Monte Carlo simulara fielmente o que voce alimentar — incluindo um modelo ruim. Uma LogNormal de salarios ajustada a dados que sao, na verdade, de cauda pesada vai gerar um IC que parece estreito e esta errado. O artigo companheiro sobre selecao de distribuicoes e caudas pesadas trata dessa pergunta diretamente — como escolher uma distribuicao a partir de dados, quando suspeitar de uma cauda mais pesada do que a vista sugere, e o que acontece com estimativas de risco quando voce erra. Se so der tempo de ler um, leia este primeiro; o companheiro e o que impede voce de estar precisamente errado.
 
-> **Ponte para §4:** o modelo agora esta definido. As proximas duas secoes respondem as duas perguntas que qualquer praticante faz antes de confiar em uma simulacao: *"a media vai convergir?"* (LGN, §4) e *"quao confiante posso estar apos $N$ rodadas?"* (TCL, §5).
+Com o modelo definido, as proximas duas secoes respondem as duas perguntas que qualquer praticante faz antes de confiar em uma simulacao: *a media vai convergir?* (Secao 4, Lei dos Grandes Numeros) e *quao confiante posso estar apos $N$ rodadas?* (Secao 5, Teorema Central do Limite).
 
 ---
 
@@ -292,7 +285,7 @@ A Lei Forte garante convergencia quase certa (probabilidade 1).
 ![Convergencia LGN](../figures/lln_convergence.png)
 *Figura 1: Dez execucoes independentes da media amostral convergindo para $E[X]$, com banda de Chebyshev a 95%.*
 
-> **Ponte para §5:** a LGN garante que chegamos a resposta certa eventualmente. Ela *nao* diz quao perto estamos depois de, digamos, $N = 1.000$ rodadas. O TCL fecha essa lacuna ao dar o *formato* do erro — e e isso que permite construir intervalos de confianca.
+A LGN garante que chegamos a resposta certa eventualmente. Ela nao diz quao perto estamos depois de, digamos, $N = 1.000$ rodadas — o limite de Chebyshev e um pior caso entre todas as distribuicoes, nao uma estimativa apertada. Para responder "quao confiante posso estar?", precisamos do *formato* do erro, nao apenas de seu decaimento. E isso que o Teorema Central do Limite oferece.
 
 ---
 
@@ -353,7 +346,7 @@ Para nosso estudo de caso ($\sigma \approx 493K$, $\epsilon = 100K$, 95%): $N \g
 ![Emergencia de Normalidade](../figures/clt_normality_emergence.png)
 *Figura 2: Conforme $n$ aumenta, a media padronizada converge para $N(0,1)$.*
 
-> **Ponte para §6:** com a LGN dando convergencia e o TCL dando a taxa de erro, o estimador Monte Carlo esta totalmente especificado — e podemos finalmente enunciar suas propriedades formais.
+Com a LGN dando convergencia e o TCL dando a taxa de erro, o estimador Monte Carlo esta totalmente especificado. Podemos finalmente enunciar suas propriedades formais — e tratar a pergunta silenciosa de quando, mesmo com tudo isso, o estimador ainda pode produzir respostas confiantemente erradas.
 
 ---
 
@@ -405,7 +398,7 @@ Monte Carlo e um estimador fiel de $E[g(X)]$ *dado* um modelo. Ele *nao* verific
 
 A afirmacao honesta e mais estreita do que "Monte Carlo da a resposta". E: *Monte Carlo da a resposta que o modelo implica*. Falhas a montante da simulacao — distribuicao errada, dependencias erradas, cauda errada — nao sao detectadas pela simulacao em si. Valide separadamente.
 
-> **Ponte para §7:** o estimador funciona, com ressalvas. Mas a taxa $O(1/\sqrt{N})$ e dura — toda divisao por dois do IC exige quadruplicar as simulacoes. A proxima secao mostra como quebrar esse teto sem mexer em $N$.
+Com essas ressalvas reconhecidas, o estimador funciona — mas a taxa $O(1/\sqrt{N})$ e dura. Toda divisao por dois do IC exige quadruplicar as simulacoes, e na precisao necessaria para decisoes orcamentarias serias isso fica caro rapido. A proxima secao mostra como quebrar esse teto sem mexer em $N$.
 
 ---
 
@@ -433,7 +426,7 @@ $$
 \text{Var}(\hat{\theta}_{CV}) = \frac{\text{Var}(g(X))}{N}(1 - \rho_{g,h}^2)
 $$
 
-**No estudo de caso:** usando soma bruta de salarios como controle ($\rho \approx 0,99$) da ~50× de reducao. Em qualquer orcamento, o componente dominante com media analitica conhecida e a variavel de controle natural.
+**No estudo de caso:** usando soma bruta de salarios como controle ($\rho \approx 0,99$) obtem-se aproximadamente **30× de reducao de variancia** — equivalentemente, uma reducao de 5-6× na semi-amplitude do IC 95% para um mesmo $N$. Em qualquer orcamento, o componente dominante com media analitica conhecida e a variavel de controle natural.
 
 ### Variaveis Antiteticas
 
@@ -454,15 +447,15 @@ Sempre. Remove a variancia entre estratos.
 
 ### Por Que Isso Importa Alem da Matematica: ROI de Compute
 
-Uma reducao de variancia de 50× soa como curiosidade matematica. E um resultado de **compute e tempo de resposta**.
+Uma reducao de variancia de 30× soa como curiosidade matematica. E um resultado de **compute e tempo de resposta**.
 
-Suponha que a simulacao simples precise de $N = 50.000$ rodadas para entregar um intervalo de confianca de ±R$ 50K. Com variaveis de controle, a mesma precisao chega em $N = 1.000$. Traduzindo para a realidade de engenharia:
+Suponha que a simulacao simples precise de $N = 30.000$ rodadas para entregar um intervalo de confianca de ±R$ 50K. Com variaveis de controle, a mesma precisao chega em $N = 1.000$. Traduzindo para a realidade de engenharia:
 
 | Aspecto | MC Simples | Com Variaveis de Controle | Implicacao Pratica |
 |---------|-----------|---------------------------|---------------------|
-| Rodadas para IC ±R$ 50K | 50.000 | 1.000 | 50× menos cenarios |
-| Wall-clock em um laptop | ~30 s | ~0,6 s | **Atualizacao interativa em tempo real** |
-| Custo de cloud por refresh | ~50 vCPU-seg | ~1 vCPU-seg | Desprezivel por query |
+| Rodadas para IC ±R$ 50K | 30.000 | 1.000 | 30× menos cenarios |
+| Wall-clock em um laptop | ~18 s | ~0,6 s | **Atualizacao interativa em tempo real** |
+| Custo de cloud por refresh | ~30 vCPU-seg | ~1 vCPU-seg | Desprezivel por query |
 | Adequado para dashboard | Nao (lento demais) | Sim | Um CFO pode re-rodar durante uma reuniao de board |
 
 O ROI nao e o numero da variancia; e o que esse numero *viabiliza*:
@@ -473,7 +466,7 @@ O ROI nao e o numero da variancia; e o que esse numero *viabiliza*:
 
 A matematica justifica a tecnica. A economia de compute e o que faz ela ser entregue.
 
-> **Ponte para §8:** ate aqui, a simulacao e construida uma vez, antes do periodo comecar. A Secao 8 reformula a mesma maquinaria como a *primeira versao* de um orcamento que e atualizado mensalmente com dados reais — uma extensao Bayesiana que transforma um script unico em um forecast vivo.
+Ate aqui, a simulacao e construida uma vez, antes do periodo comecar — uma distribuicao estatica que ancora uma decisao unica. Mas orcamentos nao sao artefatos unicos; sao revisitados todo mes a medida que dados reais de gasto chegam. A proxima secao reformula a mesma maquinaria como a *primeira versao* de um orcamento que e atualizado continuamente, uma extensao Bayesiana que transforma o script unico em um forecast vivo.
 
 ---
 
@@ -530,7 +523,7 @@ Um time que entrega apenas a simulacao da Fase 1 construiu um script. Um time qu
 
 Este artigo foca na Fase 1 porque a Fase 2 herda seu rigor: uma atualizacao Bayesiana sobre uma priori mal calibrada e apenas uma forma lenta de estar errado. Acerte a simulacao primeiro; a camada de ciclo de vida e, entao, uma adicao pequena. A Secao 10 retorna a essa visao de ciclo de vida no framework pratico.
 
-> **Ponte para §9:** teoria e reframings de lado, a engine funciona? A Secao 9 roda cinco experimentos — convergencia, emergencia da normalidade, simulacao completa, reducao de variancia, sensibilidade — para validar todas as alegacoes feitas ate aqui.
+Teoria e reframings de lado, a pergunta que decide se algo disso importa e: *a engine funciona, na pratica?* A proxima secao responde experimentalmente — cinco estudos controlados cobrindo convergencia, emergencia de normalidade, simulacao completa, reducao de variancia e sensibilidade, cada um com setup, metrica e resultado explicitos.
 
 ---
 
@@ -561,7 +554,7 @@ Cada experimento segue o mesmo template — **Objetivo**, **Setup**, **Metrica**
 - **Objetivo:** estimar a distribuicao completa de $X_{\text{total}}$, nao apenas sua media — e quantificar a probabilidade de ultrapassar um teto.
 - **Setup:** $N = 50.000$ iteracoes do modelo de headcount de TI com parametros padrao, seed 42. Teto em R$ 12,5M.
 - **Metrica:** erro relativo da media MC vs $E[X]$ analitico, semi-amplitude do IC 95%, faixa P5-P95, $P(X \gt \text{teto})$.
-- **Resultado:** media MC dentro de 0,1% do analitico. Semi-amplitude do IC 95% ≈ R$ 4K. P5-P95 abrange ~R$ 1,6M. $P(\text{acima de R\$ 12,5M}) \approx 7\%$. Distribuicao assimetrica a direita.
+- **Resultado:** media MC dentro de 0,1% do analitico. Semi-amplitude do IC 95% aproximadamente R$ 4K. P5-P95 abrange ~R$ 1,6M. A probabilidade de ultrapassar R$ 12,5M e aproximadamente 3%. Distribuicao assimetrica a direita.
 
 ![Simulacao do Orcamento](../figures/budget_simulation.png)
 *Figura 4: Distribuicao do custo orcamentario (histograma + FDA) com media, P5/P95 e teto anotados.*
@@ -571,16 +564,18 @@ Cada experimento segue o mesmo template — **Objetivo**, **Setup**, **Metrica**
 - **Objetivo:** medir o speedup de variaveis de controle e antiteticas contra MC simples para o mesmo $N$.
 - **Setup:** os tres metodos em $N \in \{500, 1.000, 2.000, 5.000, 10.000\}$. Variavel de controle: soma bruta de salarios (media analitica conhecida).
 - **Metrica:** semi-amplitude do IC 95% por metodo, plotada contra $N$ em escala log-log.
-- **Resultado:** variaveis de controle reduzem a amplitude do IC em **~10×** em todos os $N$ testados ($\rho \approx 0,99$ efetivo). Antiteticas dao melhoria modesta. A inclinacao log-log e $-1/2$ para todos os metodos, confirmando a taxa $O(1/\sqrt{N})$ — reducao de variancia desloca o *intercepto*, nao a taxa.
+- **Resultado:** variaveis de controle reduzem a amplitude do IC em aproximadamente **5–6×** em todos os $N$ testados (equivalente a redu&ccedil;ao de ~30× na variancia; $\rho \approx 0,99$ efetivo). A implementacao antitetica se sobrepoe a MC simples — seu ganho modesto reflete que a estrutura Poisson composta do modelo de orcamento e dificil de "espelhar" de forma limpa via pareamento de seeds. A inclinacao log-log e $-1/2$ para todos os metodos, confirmando a taxa $O(1/\sqrt{N})$ — reducao de variancia desloca o *intercepto*, nao a taxa.
 
 *Ver Figura 3.*
 
 ### Experimento E — Analise de Sensibilidade
 
-- **Objetivo:** ranquear parametros do modelo pelo impacto em $E[X_{\text{total}}]$, para guiar onde concentrar esforco de modelagem.
-- **Setup:** variar cada um dos 8 parametros em ±20%, mantendo os demais fixos. Para cada variacao, rodar $N = 10.000$ e registrar $E[X]$.
+- **Objetivo:** ranquear parametros do modelo pelo impacto em $E[X_{\text{total}}]$ para guiar onde concentrar esforco de modelagem.
+- **Setup:** variar a **contribuicao efetiva** de cada um dos 8 parametros em ±20% (para parametros log-media, isso e um deslocamento aditivo de $\ln(1{,}2)$; para parametros lineares, uma escala multiplicativa). Manter os demais fixos. Rodar $N = 10.000$ por variacao.
 - **Metrica:** variacao percentual de $E[X_{\text{total}}]$ relativa ao caso base.
-- **Resultado:** os parametros do componente dominante (log-media salarial, headcount) respondem por ~95% da dispersao. Parametros de horas extras e incidentes tem impacto <1% cada. **Implicacao pratica:** invista esforco de modelagem nos parametros do seu maior componente de custo.
+- **Resultado:** tres parametros dominam, cada um produzindo aproximadamente o mesmo movimento de ±19-20% em $E[X_{\text{total}}]$: a media salarial ($\mu_s$ via $E[S]$), o multiplicador de beneficios ($\beta$) e o headcount ($n$). Todos os tres atuam linearmente sobre o componente salarial, que e ~97% do orcamento. Parametros de horas extras e incidentes mudam o total em menos de 1%. **Implicacao pratica:** invista esforco de modelagem nas tres alavancas salariais; refinar o modelo de horas extras ou incidentes e ruido.
+
+> **Por que "efetivo ±20%" e nao raw ±20%?** O log-media salarial $\mu_s$ entra em $E[S] = e^{\mu_s + \sigma_s^2/2}$ exponencialmente. Variar $\mu_s$ em ±20% aditivamente multiplicaria $E[S]$ por aproximadamente 6,3× — tornando o grafico visualmente dominado por $\mu_s$ por uma razao nao-comercial. O setup corrigido varia o *valor esperado efetivo* de cada componente, entao o ranking reflete sensibilidade de negocio, nao escala do parametro.
 
 ![Tornado de Sensibilidade](../figures/sensitivity_tornado.png)
 *Figura 5: Impacto dos parametros em $E[X_{\text{total}}]$.*
@@ -593,11 +588,11 @@ Cada experimento segue o mesmo template — **Objetivo**, **Setup**, **Metrica**
 | Media MC (N=50K) | Dentro de 0,1% do analitico |
 | Semi-amplitude IC 95% (N=50K) | ~R$ 4K |
 | Faixa P5-P95 | ~R$ 1,6M |
-| $P(X \gt R\$ 12,5M)$ | ~7% |
+| P(X excede R$ 12,5M) | ~3% |
 | Parametro mais sensivel | Media do componente dominante |
-| Melhor reducao de variancia | Variaveis de controle (~10-50×) |
+| Melhor reducao de variancia | Variaveis de controle (~30× na variancia, ~5-6× na amplitude do IC) |
 
-> **Ponte para §10:** os experimentos confirmam que a engine funciona. A Secao 10 transforma isso em um workflow — o que fazer na segunda-feira de manha, como apresentar resultados a um publico nao-tecnico, e o que exigir de qualquer orcamento que cruzar sua mesa.
+Os experimentos confirmam que a engine funciona. A lacuna restante e operacional: transformar uma simulacao validada em um workflow que um gestor de orcamento possa rodar na segunda-feira de manha, apresentar a lideranca sem perder a audiencia, e aplicar a outros tipos de orcamento alem do estudo de caso. E o que o framework pratico oferece.
 
 ---
 
@@ -648,17 +643,17 @@ Isso converte a distribuicao em tres numeros acionaveis por qualquer gestor de o
 
 O momento de maior alavancagem deste artigo inteiro e a linguagem que um gestor de orcamento usa diante da lideranca. Imprima esta comparacao lado a lado e cole na parede.
 
-> **🚫 Antes — estimativa pontual:**
+> **Antes — estimativa pontual:**
 >
 > *"O orcamento do proximo ano e R$ 11,55M."*
 >
 > Uma meta. Sem risco anexado. Toda variancia vira um miss.
 
-> **✅ Depois — distribuicao + politica:**
+> **Depois — distribuicao + politica:**
 >
 > *"Temos 95% de confianca de que o custo ficara entre R$ 10,7M e R$ 12,4M, com media de R$ 11,55M.*
 >
-> *Propomos reservar R$ 12,0M como orcamento planejado (P90), com R$ 500K adicionais de capital de risco disponiveis se necessario (P99). A probabilidade de ultrapassar R$ 12,5M e aproximadamente 7%. O principal fator de incerteza e [componente dominante] — investir em melhores forecasts de salario reduz a faixa mais que qualquer outra acao."*
+> *Propomos reservar R$ 12,0M como orcamento planejado (P90), com R$ 500K adicionais de capital de risco disponiveis se necessario (P99). A probabilidade de ultrapassar R$ 12,5M e aproximadamente 3%. O principal fator de incerteza e [componente dominante] — investir em melhores forecasts de salario reduz a faixa mais que qualquer outra acao."*
 >
 > Um perfil de risco que a lideranca pode subscrever. Variancias sao lidas contra o *intervalo*, nao a media.
 
@@ -697,7 +692,7 @@ Um orcamento de numero unico e um **modelo incompleto**. Ele comprime uma distri
 
 Essa compressao tem custo. Capital fica super-reservado contra medos que ninguem quantificou, ou sub-reservado contra caudas que ninguem enxergou. Variancias de forecast sao lidas como erros, em vez de sorteios de uma distribuicao. O CFO e convidado a subscrever uma meta, nao um risco.
 
-Este artigo construiu a maquinaria matematica para substituir esse numero unico por uma distribuicao de probabilidade. Provamos que o estimador converge (LGN), quantificamos seu erro (TCL) e tornamos a simulacao eficiente (reducao de variancia). A validacao experimental confirmou: Monte Carlo recupera a media analitica dentro de 0,1%, variaveis de controle dao 10-50× de speedup, e o parametro mais sensivel e exatamente o componente de custo dominante — apontando ao analista onde concentrar esforco de modelagem.
+Este artigo construiu a maquinaria matematica para substituir esse numero unico por uma distribuicao de probabilidade. Provamos que o estimador converge (LGN), quantificamos seu erro (TCL) e tornamos a simulacao eficiente (reducao de variancia). A validacao experimental confirmou: Monte Carlo recupera a media analitica dentro de 0,1%, variaveis de controle dao aproximadamente 30× de reducao de variancia (5-6× de IC mais estreito), e o parametro mais sensivel e exatamente o componente de custo dominante — apontando ao analista onde concentrar esforco de modelagem.
 
 Mas a tese mais profunda nao e tecnica. E esta:
 
